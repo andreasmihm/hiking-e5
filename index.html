@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alpenüberquerung E5</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        color: #333;
+        margin: 0;
+        padding: 20px;
+    }
+    h2 {
+        color: #0056b3;
+    }
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+    li {
+        margin-bottom: 10px;
+    }
+    a {
+        text-decoration: none;
+        color: #007bff;
+    }
+    a:hover {
+        text-decoration: underline;
+    }
+    .weather {
+        background-color: #ffffff;
+        border: 1px solid #ddd;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .weather h3 {
+        color: #444;
+        margin-top: 0;
+    }
+    .weather p {
+        margin: 5px 0;
+    }
+    .fas {
+        margin-right: 5px;
+    }
+    @media (max-width: 768px) {
+        body {
+            padding: 10px;
+        }
+    }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <h1>Webcams und Wetter entlang des Fernwanderwegs E5 von Oberstdorf nach Meran</h1>
+    
+    <h2>E5 Tag 1: Spielmannsau - Kemptner Hütte</h2>
+    <ul>
+        <li><a href="https://www.oberstdorf.de/livecam/" target="_blank">Oberstdorf</a></li>
+        <li><a href="https://www.foto-webcam.eu/webcam/kemptnerhuette/" target="_blank">Kemptner Hütte</a></li>
+    </ul>
+    <div class="weather" id="weather-kemptner-huette"></div>
+
+    <h2>E5 Tag 2: Kemptner Hütte nach Bach</h2>
+    <ul>
+        <li><a href="https://www.lechtal.at/de/service/webcams/livecams-in-lechtal.html" target="_blank">Lechtal</a></li>
+        <li><a href="https://www.lechtal.at/de/service/webcams/livecams-in-lechtal.html" target="_blank">Bach</a></li>
+    </ul>
+    <div class="weather" id="weather-bach"></div>
+
+    <h2>E5 Tag 3: Bach zur Memminger Hütte</h2>
+    <ul>
+        <li><a href="https://www.foto-webcam.eu/webcam/memmingerhuette/" target="_blank">Memminger Hütte</a></li>
+    </ul>
+    <div class="weather" id="weather-memminger"></div>
+
+    <h2>E5 Tag 4: Memminger Hütte nach Venet Bergbahn/Skihütte Zams</h2>
+    <ul>
+        <li><a href="https://www.venet.at/de/webcams" target="_blank">Venet Bergbahn</a></li>
+    </ul>
+    <div class="weather" id="weather-zams"></div>
+
+    <h2>E5 Tag 5: Zamser Hütte - Wenns - Bus Mittelberg Gletscherhütte</h2>
+    <ul>
+        <li><a href="https://www.bergfex.at/venet/webcams/c5872/" target="_blank">Zams</a></li>
+        <li><a href="https://www.bergfex.at/pitztal/webcams/c5039/" target="_blank">Pitztal - Mittelberg Gletscher</a></li>
+    </ul>
+    <div class="weather" id="weather-pitztal"></div>
+
+    <h2>E5 Tag 6: Gletscherstube über Braunschweiger Hütte zur Gaislachalm</h2>
+    <ul>
+        <li><a href="https://www.foto-webcam.eu/webcam/braunschweigerhuette/" target="_blank">Braunschweiger Hütte</a></li>
+        <li><a href="https://www.soelden.com/webcams.html" target="_blank">Sölden (Gaislachalm)</a></li>
+    </ul>
+    <div class="weather" id="weather-soelden"></div>
+
+    <h2>E5 Tag 7: Gaislachalm nach Gasthof Hochfirst</h2>
+    <ul>
+        <li><a href="https://www.soelden.com/webcams.html" target="_blank">Sölden</a></li>
+        <li><a href="https://www.webcam-4insiders.com/de/Wetter-Gasthof-Hochfirst-Webcam/13869-Webcam-Gasthof Hochfirst.php" target="_blank">Gasthof Hochfirst</a></li>
+    </ul>
+    <div class="weather" id="weather-hochfirst"></div>
+
+    <h2>E5 Tag 8: Gasthof Hochfirst nach Moos im Passeier</h2>
+    <ul>
+        <li><a href="https://www.bergfex.it/moos-im-passeier/webcams/c12079/" target="_blank">Moos im Passeier</a></li>
+    </ul>
+    <div class="weather" id="weather-moos"></div>
+
+    <h2>Status der Alpenüberquerung</h2>
+    <p>Der aktuelle Bergsportbericht zeigt, dass die Wege gut begehbar sind, solange man festes Schuhwerk trägt. Es gibt keine größeren Sperrungen oder Behinderungen auf den Routen des E5. Weitere Informationen finden Sie auf der <a href="https://www.oberstdorf.de/alpininfo/bergsportbericht/" target="_blank">offiziellen Webseite</a>.</p>
+
+    <script>
+        async function getWeather(lat, lon, locationName, elementId) {
+            const apiKey = 'ed4eb4e8d55e462eb43124401240606';
+            const url = `https://api.worldweatheronline.com/premium/v1/ski.ashx?key=${apiKey}&q=${lat},${lon}&num_of_days=1&format=json`;
+            const response = await fetch(url);
+            const data = await response.json();
+
+            const weatherElement = document.getElementById(elementId);
+            if (response.ok && data.data.weather && data.data.weather[0]) {
+                const weather = data.data.weather[0];
+                const bottom = weather.bottom ? weather.bottom[0] : {};
+                const hourly = weather.hourly ? weather.hourly[0] : {};
+                const top = hourly.top ? hourly.top[0] : {};
+                const weatherDesc = hourly.mid[0].weatherDesc[0].value ? hourly.mid[0].weatherDesc[0].value : "Keine Beschreibung verfügbar";
+
+                weatherElement.innerHTML = `
+                    <h3>Wetter für ${locationName} (Lat: ${lat}, Lon: ${lon})</h3>
+                    <p><i class="fas fa-cloud"></i> ${weatherDesc}</p>
+                    <p><i class="fas fa-temperature-low"></i> ${bottom.mintempC || 'N/A'}°C</p>
+                    <p><i class="fas fa-temperature-high"></i> ${bottom.maxtempC || 'N/A'}°C</p>
+                    <p><i class="fas fa-snowflake"></i> ${weather.chanceofsnow || 'N/A'}%</p>
+                    <p><i class="fas fa-snowflake"></i> ${weather.totalSnowfall_cm || 'N/A'} cm</p>
+                    <p><i class="fas fa-wind"></i> ${top.windspeedKmph || 'N/A'} km/h</p>
+                    <p><i class="fas fa-compass"></i> ${top.winddir16Point || 'N/A'}</p>
+                    <p><i class="fas fa-cloud-rain"></i> ${hourly.precipMM || 'N/A'} mm</p>
+                    <p><i class="fas fa-tint"></i> ${hourly.humidity || 'N/A'}%</p>
+                    <p><i class="fas fa-cloud"></i> ${hourly.cloudcover || 'N/A'}%</p>
+                    <p><i class="fas fa-eye"></i> ${hourly.visibility || 'N/A'} km</p>
+                `;
+            } else {
+                weatherElement.innerHTML = `<p>Konnte Wetterdaten nicht abrufen.</p>`;
+            }
+        }
+
+        getWeather(47.313032, 10.327140, 'Kemptner Hütte', 'weather-kemptner-huette'); // Kemptner Hütte
+        getWeather(47.266, 10.404, 'Bach', 'weather-bach'); // Bach
+        getWeather(47.199697, 10.478905, 'Memminger Hütte', 'weather-memminger'); // Memminger Hütte
+        getWeather(47.152556, 10.619381, 'Skihütte Zams', 'weather-zams'); // Skihütte Zams
+        getWeather(46.946923, 10.890771, 'Gletscherstube Mittelberg', 'weather-pitztal'); // Gletscherstube Mittelberg
+        getWeather(46.935096, 10.909545, 'Braunschweiger Hütte', 'weather-soelden'); // Braunschweiger Hütte
+        getWeather(46.904894, 11.097383, 'Timmelsjoch', 'weather-hochfirst'); // Timmelsjoch
+        getWeather(46.779, 11.181, 'Moos im Passeier', 'weather-moos'); // Moos im Passeier
+    </script>
+</body>
+</html>
